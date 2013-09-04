@@ -27,6 +27,7 @@ import os
 import sys
 
 import docopt
+from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 try:
     import RPi.GPIO as GPIO
 except RuntimeError:
@@ -56,9 +57,18 @@ class FalconServer(object):
         GPIO.setup(25, GPIO.OUT) # laser right
 
         try:
-            pass
+            server = SimpleJSONRPCServer(('localhost', 8080))
+
+            server.register_function(self.set_lights)
+            server.register_function(self.get_lights)
+            server.register_function(self.fire_laser)
+            server.register_function(self.get_sounds)
+            server.register_function(self.play_sound)
+            server.register_function(self.cinematic)
+
+            server.serve_forever()
         except KeyboardInterupt:
-            pass
+            sys.exit(0)
         finally:
             GPIO.cleanup()
 
@@ -79,16 +89,26 @@ class FalconServer(object):
         """
         Fire the lasers
         """
-        self.play_sound('laser')
+        GPIO.output(24, left)
+        GPIO.output(25, right)
+        self.play_sound('laser.mp3')
+        time.sleep(0.1)
+        GPIO.output(24, False)
+        GPIO.output(25, False)
+
+    def get_sounds(self):
+        """
+        List all sound files in the falcon dir
+        """
+        sounds = [x[2] for x in os.walk(self._sounds)][0]
+        return sounds
 
     def play_sound(self, sound):
         """
         Play a sound file
         """
-        sounds = [x[2] for x in os.walk(self._sounds)][0]
-        if '%s.wav' % sound.lower() in sounds:
-            # play sound
-            pass
+        if sound in self.get_sounds():
+            os.system('mpg123 %s' % os.path.join(self._sounds, sound))
         else
             return False
 
@@ -97,7 +117,7 @@ class FalconServer(object):
         Play a predefined animation
         """
         self.set_lights()
-        self.play_sound('flyby')
+        self.play_sound('flyby.mp3')
         for i in range(4):
             self.fire_laser()
             time.sleep(0.2)
