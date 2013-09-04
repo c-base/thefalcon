@@ -1,0 +1,49 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+"""
+falcon - The control client for the millenium falcon
+
+Usage:
+  falcon [-v | --verbose]
+  falcon (-h | --help)
+  falcon --version
+
+Options:
+  -h, --help    Show this screen.
+  --version     Show version.
+"""
+
+__author__ = "Ricardo (XenGi) Band"
+__copyright__ = "Copyright 2013, Ricardo Band"
+__credits__ = ["Ricardo (XenGi) Band", ]
+__license__ = "MIT"
+__version__ = "0.0.1"
+__maintainer__ = "Ricardo (XenGi) Band"
+__email__ = "xen@c-base.org"
+__status__ = "Development"
+
+import os
+import sys
+
+import docopt
+
+class FalconClient(object):
+    """
+    Main class which holds the client code for the falcon.
+    """
+    def __init__(self, verbose):
+        """
+        Initialize main class with some stuff.
+        """
+        self._verbose = verbose
+
+        try:
+            pass
+        except KeyboardInterupt:
+            pass
+
+
+if __name__ == '__main__':
+    ARGS = docopt.docopt(__doc__, version=__version__)
+    FALCON = FalconServer(ARGS['--verbose'])

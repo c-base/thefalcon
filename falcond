@@ -1,0 +1,110 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+"""
+falcond - The control daemon of the millenium falcon
+
+Usage:
+  falcond [-v | --verbose]
+  falcond (-h | --help)
+  falcond --version
+
+Options:
+  -h, --help    Show this screen.
+  --version     Show version.
+"""
+
+__author__ = "Ricardo (XenGi) Band"
+__copyright__ = "Copyright 2013, Ricardo Band"
+__credits__ = ["Ricardo (XenGi) Band", ]
+__license__ = "MIT"
+__version__ = "0.0.1"
+__maintainer__ = "Ricardo (XenGi) Band"
+__email__ = "xen@c-base.org"
+__status__ = "Development"
+
+import os
+import sys
+
+import docopt
+try:
+    import RPi.GPIO as GPIO
+except RuntimeError:
+    print 'Error importing RPi.GPIO!  This is probably because you need '
+          'superuser privileges.  You can achieve this by using \'sudo\' '
+          'to run your script'
+
+class FalconServer(object):
+    """
+    Main class which holds the server code for the falcon.
+    """
+    def __init__(self, verbose):
+        """
+        Initialize main class with some stuff.
+        """
+        self._verbose = verbose
+
+        self._sounds = '/opt/falcon/sounds'
+
+        if self._verbose:
+            print 'Starting up the falcond software on Raspberry Pi %s.' % GPIO.RPI_REVISION
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(self._verbose)
+        GPIO.setup(22, GPIO.OUT) # lights left
+        GPIO.setup(23, GPIO.OUT) # lights right
+        GPIO.setup(24, GPIO.OUT) # laser left
+        GPIO.setup(25, GPIO.OUT) # laser right
+
+        try:
+            pass
+        except KeyboardInterupt:
+            pass
+        finally:
+            GPIO.cleanup()
+
+    def set_lights(self, left=True, right=True):
+        """
+        Set the lights on or off
+        """
+        GPIO.output(22, left)
+        GPIO.output(23, right)
+
+    def get_lights(self):
+        """
+        Get current state of the lights
+        """
+        return [GPIO.input(22), GPIO.input(23)]
+
+    def fire_laser(self, left=True, right=True, sound=True):
+        """
+        Fire the lasers
+        """
+        self.play_sound('laser')
+
+    def play_sound(self, sound):
+        """
+        Play a sound file
+        """
+        sounds = [x[2] for x in os.walk(self._sounds)][0]
+        if '%s.wav' % sound.lower() in sounds:
+            # play sound
+            pass
+        else
+            return False
+
+    def cinematic(self):
+        """
+        Play a predefined animation
+        """
+        self.set_lights()
+        self.play_sound('flyby')
+        for i in range(4):
+            self.fire_laser()
+            time.sleep(0.2)
+        time.sleep(2)
+        self.set_lights(False, False)
+
+
+if __name__ == '__main__':
+    ARGS = docopt.docopt(__doc__, version=__version__)
+    FALCON = FalconServer(ARGS['--verbose'])
