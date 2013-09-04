@@ -27,6 +27,7 @@ import os
 import sys
 
 import docopt
+import jsonrpclib
 
 class FalconClient(object):
     """
@@ -39,9 +40,10 @@ class FalconClient(object):
         self._verbose = verbose
 
         try:
-            pass
+            server = jsonrpclib.Server('http://localhost:8080')
+            server.cinematic()
         except KeyboardInterupt:
-            pass
+            sys.exit(0)
 
 
 if __name__ == '__main__':
