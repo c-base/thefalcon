@@ -31,8 +31,8 @@ from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 try:
     import RPi.GPIO as GPIO
 except RuntimeError:
-    print 'Error importing RPi.GPIO!  This is probably because you need '
-          'superuser privileges.  You can achieve this by using \'sudo\' '
+    print 'Error importing RPi.GPIO! This is probably because you need ' \
+          'superuser privileges. You can achieve this by using \'sudo\' ' \
           'to run your script'
 
 class FalconServer(object):
@@ -109,7 +109,7 @@ class FalconServer(object):
         """
         if sound in self.get_sounds():
             os.system('mpg123 %s' % os.path.join(self._sounds, sound))
-        else
+        else:
             return False
 
     def cinematic(self):
