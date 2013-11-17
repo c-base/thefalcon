@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 
 """
@@ -35,6 +35,11 @@ except RuntimeError:
           'superuser privileges. You can achieve this by using \'sudo\' ' \
           'to run your script'
 
+LIGHT_R = 15    # IO 22
+LIGHT_L = 16    # IO 23
+LASER_R = 18    # IO 24
+LASER_L = 22    # IO 25
+
 class FalconServer(object):
     """
     Main class which holds the server code for the falcon.
@@ -51,10 +56,11 @@ class FalconServer(object):
             print 'Starting up the falcond software on Raspberry Pi %s.' % GPIO.RPI_REVISION
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(self._verbose)
-        GPIO.setup(22, GPIO.OUT) # lights left
-        GPIO.setup(23, GPIO.OUT) # lights right
-        GPIO.setup(24, GPIO.OUT) # laser left
-        GPIO.setup(25, GPIO.OUT) # laser right
+
+        GPIO.setup(LIGHT_R, GPIO.OUT)
+        GPIO.setup(LIGHT_L, GPIO.OUT)
+        GPIO.setup(LASER_R, GPIO.OUT)
+        GPIO.setup(LASER_L, GPIO.OUT)
 
         try:
             server = SimpleJSONRPCServer(('localhost', 8080))
@@ -76,25 +82,24 @@ class FalconServer(object):
         """
         Set the lights on or off
         """
-        GPIO.output(22, left)
-        GPIO.output(23, right)
+        GPIO.output(LIGHT_L, left)
+        GPIO.output(LIGHT_R, right)
 
     def get_lights(self):
         """
         Get current state of the lights
         """
-        return [GPIO.input(22), GPIO.input(23)]
+        return [GPIO.input(LIGHT_L), GPIO.input(LIGHT_R)]
 
     def fire_laser(self, left=True, right=True, sound=True):
         """
         Fire the lasers
         """
-        GPIO.output(24, left)
-        GPIO.output(25, right)
+        GPIO.output(LASER_L, left)
+        GPIO.output(LASER_R, right)
         self.play_sound('laser.mp3')
-        time.sleep(0.1)
-        GPIO.output(24, False)
-        GPIO.output(25, False)
+        GPIO.output(LASER_L, False)
+        GPIO.output(LASER_R, False)
 
     def get_sounds(self):
         """
@@ -120,8 +125,7 @@ class FalconServer(object):
         self.play_sound('flyby.mp3')
         for i in range(4):
             self.fire_laser()
-            time.sleep(0.2)
-        time.sleep(2)
+        time.sleep(1)
         self.set_lights(False, False)
 
 
