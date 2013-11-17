@@ -1,5 +1,11 @@
-2013-09-04 Ricardo (XenGi) Band <xen@c-base.org>
+2013-11-17  Ricardo (XenGi) Band    <xen@c-base.org>
 
-	* 0.0.1-1 :
+	* 0.1.0-alpha :
+    GPIO access fixed.
+    code cleanup.
+
+2013-09-04  Ricardo (XenGi) Band    <xen@c-base.org>
+
+	* 0.0.1 :
 	added ChangeLog.
     initial release.
