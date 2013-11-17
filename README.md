@@ -11,5 +11,5 @@ spacestation). It runs on a Raspberry Pi and uses Python and JSONRPC.
 
 This is free and open source software licenced under the MIT licence.
 
-[c-base]: https://github.com/raw/master/c-base.png
-[falcon]: https://github.com/raw/master/falcon.png
+[c-base]: https://raw.github.com/c-base/thefalcon/master/c-base.png
+[falcon]: https://raw.github.com/c-base/thefalcon/master/falcon.png
