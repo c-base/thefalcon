@@ -10,8 +10,9 @@ Usage:
   falcond --version
 
 Options:
-  -h, --help    Show this screen.
-  --version     Show version.
+  -v, --verbose  Show output on Stdout.
+  -h, --help     Show this screen.
+  --version      Show version.
 """
 
 __author__ = "Ricardo (XenGi) Band"
@@ -25,6 +26,7 @@ __status__ = "Development"
 
 import os
 import sys
+import time
 import ConfigParser
 
 import docopt
@@ -72,10 +74,9 @@ class FalconServer(object):
             print('      .sNNds+smmmmmm```.--:+shNo               .:.:::/+oo/+oo/+oo+:/::.:.')
             print('        `:smNNmmmmsooosyhdmNmy/`                `/:///+//:/o++://+////:`')
             print('            `:+syhddddhhs+:.                      .+s/::://++//::://:.')
-            print('                                                     .-:://++s+/:-.')
-            
+            print('                                                     .-:://++s+/:-.i\n')
             print('The Falcon is booting...')
-        self.config = ConfigParser.SafeConfigParser()
+        self.config = ConfigParser.SafeConfigParser()
         self.config.read(['/etc/falcond.conf',
                           'falcond.conf'])
 
@@ -84,18 +85,19 @@ class FalconServer(object):
         self._port = self.config.getint('falcond', 'port')
 
         if self._verbose:
-            print 'Starting up the falcond software on Raspberry Pi %s.' % GPIO.RPI_REVISION
-        GPIO.setmode(GPIO.BCM)
+            print 'Starting up the falcond software on Raspberry Pi v%s.' % GPIO.RPI_REVISION
+        GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(self._verbose)
 
-        GPIO.setup(LIGHT_R, GPIO.OUT)
-        GPIO.setup(LIGHT_L, GPIO.OUT)
-        GPIO.setup(LASER_R, GPIO.OUT)
-        GPIO.setup(LASER_L, GPIO.OUT)
+        GPIO.setup(LIGHT_R, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LIGHT_L, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LASER_R, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LASER_L, GPIO.OUT, initial=GPIO.LOW)
 
         try:
-            server = SimpleJSONRPCServer((self._hostname, self._ip))
+            server = SimpleJSONRPCServer((self._hostname, self._port))
 
+            server.register_function(self.help)
             server.register_function(self.set_lights)
             server.register_function(self.get_lights)
             server.register_function(self.fire_laser)
@@ -104,10 +106,21 @@ class FalconServer(object):
             server.register_function(self.cinematic)
 
             server.serve_forever()
-        except KeyboardInterupt:
+        except KeyboardInterrupt:
             sys.exit(0)
         finally:
             GPIO.cleanup()
+
+    def help(self):
+        """
+        Lists all available functions
+        """
+        return('set_lights(left=True, right=True)' \
+               'get_lights()' \
+               'fire_laser(left=True, right=True, sound=True)' \
+               'get_sounds()' \
+               'play_sound(filename)' \
+               'cinematic()')
 
     def set_lights(self, left=True, right=True):
         """
@@ -129,6 +142,7 @@ class FalconServer(object):
         GPIO.output(LASER_L, left)
         GPIO.output(LASER_R, right)
         self.play_sound('laser.mp3')
+        time.sleep(1)
         GPIO.output(LASER_L, False)
         GPIO.output(LASER_R, False)
 

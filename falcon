@@ -42,10 +42,10 @@ class FalconClient(object):
         try:
             server = jsonrpclib.Server('http://falcon.cbrp3.c-base.org:8080')
             server.cinematic()
-        except KeyboardInterupt:
+        except KeyboardInterrupt:
             sys.exit(0)
 
 
 if __name__ == '__main__':
     ARGS = docopt.docopt(__doc__, version=__version__)
-    FALCON = FalconServer(ARGS['--verbose'])
+    FALCON = FalconClient(ARGS['--verbose'])
