@@ -142,7 +142,7 @@ class FalconServer(object):
         GPIO.output(LASER_L, left)
         GPIO.output(LASER_R, right)
         self.play_sound('laser.mp3')
-        time.sleep(1)
+        #time.sleep(0.3)
         GPIO.output(LASER_L, False)
         GPIO.output(LASER_R, False)
 
@@ -159,6 +159,8 @@ class FalconServer(object):
         """
         if sound in self.get_sounds():
             os.system('mpg123 %s' % os.path.join(self._sounds, sound))
+        elif os.path.exists(os.path.join(os.path.dirname(sys.argv[0]), sound)):
+            os.system('mpg123 %s' % os.path.join(os.path.dirname(sys.argv[0]), sound))
         else:
             return False
 
