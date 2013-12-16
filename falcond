@@ -50,7 +50,32 @@ class FalconServer(object):
         Initialize main class with some stuff.
         """
         self._verbose = verbose
-        self.config = ConfigParser.SafeConfigParser()
+        if self._verbose:
+            # bootup "animation"
+            print('            .:+shhdd                                    /+   `/')
+            print('        `/ymNNmmmmsmyso-..`                             /+   `/:')
+            print('      -sNNds+oyo/:-..+md/+dho-                         :/:-  -:::')
+            print('    .yNmy//::/+      oNs   ++hdo                      ///:-  -:/:/')
+            print('   +NNy/os/o/` .:///sdm+-`/  `+.                     //o+/::-:/+o/:')
+            print('  sNm+/dMMN+-++-`  .MMNMNms:-.                      /+::s+:+/:::-/o:')
+            print(' oNm+omNMNNmm+ .:::dmmmmNNd/-                      ::++/o/////+//++.-  +o+')
+            print('.NNo/mNNMNdNNNds-+oyysy/-o:  /                   .//-:-.:-/-:/o++/-----oso:')
+            print('sNdNdNNNNdNNNdNdm/osss+os+d:  /                 .:::///::-+-://///...:/-o.-')
+            print('hNdNdNNNMdNNd/y+/hNmdNm/ohNh--s                ::-..:::--./-://:/y+:-://---')
+            print('hNh+dNNNNy--o`o+/hNmdNm/oyddNNN               :-----..-:--/-:/++o/://::::-')
+            print('sNdNdNNNNd. .smyo+syys+oo-/mNNs              `/.--.----..:yyyy+/+/:--.--./`')
+            print('.NNdmmNNNNy` .hmd/+osyhms+NNNh               `/////////o+-/sy/-+//////////')
+            print(' +Nmo+mNNNNd/hNNds+/ohs/. :d+                `/:///+++o//--//-///++///:::+')
+            print('  sNm+/dNNNNNmmmNNNN/  `-::`                 .-:---:/:-::+///oo::/o::---:-.')
+            print('   /NNy/omNNNNNNmmmm:--.                     `--/-oso/-:+o++++o+::++:/---:`')
+            print('    .yNms/ohmNNNNNNN        .+-               -:---:-:/+oooooooo+++/:-:-:.')
+            print('      .sNNds+smmmmmm```.--:+shNo               .:.:::/+oo/+oo/+oo+:/::.:.')
+            print('        `:smNNmmmmsooosyhdmNmy/`                `/:///+//:/o++://+////:`')
+            print('            `:+syhddddhhs+:.                      .+s/::://++//::://:.')
+            print('                                                     .-:://++s+/:-.')
+            
+            print('The Falcon is booting...')
+        self.config = ConfigParser.SafeConfigParser()
         self.config.read(['/etc/falcond.conf',
                           'falcond.conf'])
 
