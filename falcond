@@ -25,6 +25,7 @@ __status__ = "Development"
 
 import os
 import sys
+import ConfigParser
 
 import docopt
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
@@ -35,10 +36,10 @@ except RuntimeError:
           'superuser privileges. You can achieve this by using \'sudo\' ' \
           'to run your script'
 
-LIGHT_R = 15    # IO 22
-LIGHT_L = 16    # IO 23
-LASER_R = 18    # IO 24
-LASER_L = 22    # IO 25
+LIGHT_R = 15  # IO 22
+LIGHT_L = 16  # IO 23
+LASER_R = 18  # IO 24
+LASER_L = 22  # IO 25
 
 class FalconServer(object):
     """
@@ -49,8 +50,13 @@ class FalconServer(object):
         Initialize main class with some stuff.
         """
         self._verbose = verbose
+        self.config = ConfigParser.SafeConfigParser()
+        self.config.read(['/etc/falcond.conf',
+                          'falcond.conf'])
 
-        self._sounds = '/opt/falcon/sounds'
+        self._sounds = self.config.get('falcond', 'sounddir')
+        self._hostname = self.config.get('falcond', 'hostname')
+        self._port = self.config.getint('falcond', 'port')
 
         if self._verbose:
             print 'Starting up the falcond software on Raspberry Pi %s.' % GPIO.RPI_REVISION
@@ -63,7 +69,7 @@ class FalconServer(object):
         GPIO.setup(LASER_L, GPIO.OUT)
 
         try:
-            server = SimpleJSONRPCServer(('localhost', 8080))
+            server = SimpleJSONRPCServer((self._hostname, self._ip))
 
             server.register_function(self.set_lights)
             server.register_function(self.get_lights)

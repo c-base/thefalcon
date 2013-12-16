@@ -40,7 +40,7 @@ class FalconClient(object):
         self._verbose = verbose
 
         try:
-            server = jsonrpclib.Server('http://localhost:8080')
+            server = jsonrpclib.Server('http://falcon.cbrp3.c-base.org:8080')
             server.cinematic()
         except KeyboardInterupt:
             sys.exit(0)
